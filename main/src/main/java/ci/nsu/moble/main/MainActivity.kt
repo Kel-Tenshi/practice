@@ -1,6 +1,7 @@
 package ci.nsu.moble.main
 
 import android.os.Bundle
+import android.util.Log // Импорт для логирования
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,6 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ci.nsu.moble.main.ui.theme.PracticeTheme
+
+// Тэг для фильтрации в Logcat
+private const val TAG = "ColorPicker"
+
+// Структура данных вынесена наружу для стабильности
+private val colorMap = mapOf(
+    "Red" to Color.Red,
+    "Orange" to Color(255, 50, 0),
+    "Yellow" to Color.Yellow,
+    "Green" to Color.Green,
+    "Blue" to Color.Blue,
+    "Indigo" to Color(84, 6, 209),
+    "Violet" to Color(126, 0, 199)
+)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,22 +46,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ColorPickerScreen(modifier: Modifier = Modifier) {
-    // Состояние для текста в поле ввода
     var textFieldValue by remember { mutableStateOf("") }
-
-    // Состояние для цвета основной кнопки (по умолчанию серый или зеленый, как на скрине)
     var buttonColor by remember { mutableStateOf(Color.Green) }
-
-    // Карта соответствия строк цветам
-    val colorMap = mapOf(
-        "Red" to Color.Red,
-        "Orange" to Color(255,50,0),
-        "Yellow" to Color.Yellow,
-        "Green" to Color.Green,
-        "Blue" to Color.Blue,
-        "Indigo" to Color(84, 6, 209),
-        "Violet" to Color(126, 0, 199)
-    )
 
     Column(
         modifier = modifier
@@ -56,21 +57,25 @@ fun ColorPickerScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Поле ввода
         TextField(
             value = textFieldValue,
             onValueChange = { textFieldValue = it },
-            label = { Text("Введите цвет (например, Red)") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Введите название цвета") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
         )
 
-        // Кнопка "Применить цвет"
         Button(
             onClick = {
-                // Ищем цвет в мапе. Если не нашли — оставляем текущий
-                val newColor = colorMap[textFieldValue.trim()]
+                val input = textFieldValue.trim()
+                val newColor = colorMap[input]
+
                 if (newColor != null) {
+                    // Если цвет найден — меняем фон кнопки
                     buttonColor = newColor
+                } else {
+                    // Если не найден — пишем в Logcat (Вкладка Logcat в Android Studio)
+                    Log.e(TAG, "Пользовательский цвет \"$input\" не найден")
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -79,9 +84,11 @@ fun ColorPickerScreen(modifier: Modifier = Modifier) {
             Text("Применить цвет", color = Color.White)
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // Список цветных плашек как на макете
+        Text("Доступная палитра:", style = MaterialTheme.typography.titleMedium)
+
+        // Вывод списка с палитрой (Дополнительное задание)
         colorMap.forEach { (name, color) ->
             ColorBlock(name = name, color = color)
         }
@@ -93,15 +100,16 @@ fun ColorBlock(name: String, color: Color) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp),
+            .height(50.dp),
         color = color,
-        shape = MaterialTheme.shapes.medium
+        shape = MaterialTheme.shapes.small,
+        shadowElevation = 2.dp
     ) {
         Box(contentAlignment = Alignment.CenterStart) {
             Text(
                 text = name,
                 modifier = Modifier.padding(start = 16.dp),
-                color = if (color == Color.Yellow || color == Color.White) Color.Black else Color.White
+                color = if (color == Color.Yellow) Color.Black else Color.White
             )
         }
     }
