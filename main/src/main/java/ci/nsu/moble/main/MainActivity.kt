@@ -1,7 +1,7 @@
 package ci.nsu.moble.main
 
 import android.os.Bundle
-import android.util.Log // Импорт для логирования
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,10 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ci.nsu.moble.main.ui.theme.PracticeTheme
 
-// Тэг для фильтрации в Logcat
 private const val TAG = "ColorPicker"
 
-// Структура данных вынесена наружу для стабильности
+
 private val colorMap = mapOf(
     "Red" to Color.Red,
     "Orange" to Color(255, 50, 0),
@@ -47,7 +46,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ColorPickerScreen(modifier: Modifier = Modifier) {
     var textFieldValue by remember { mutableStateOf("") }
+    //поле
     var buttonColor by remember { mutableStateOf(Color.Green) }
+    //начальный цвет кнопки - зеленый
 
     Column(
         modifier = modifier
@@ -56,7 +57,8 @@ fun ColorPickerScreen(modifier: Modifier = Modifier) {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+    )
+    {
         TextField(
             value = textFieldValue,
             onValueChange = { textFieldValue = it },
@@ -88,7 +90,6 @@ fun ColorPickerScreen(modifier: Modifier = Modifier) {
 
         Text("Доступная палитра:", style = MaterialTheme.typography.titleMedium)
 
-        // Вывод списка с палитрой (Дополнительное задание)
         colorMap.forEach { (name, color) ->
             ColorBlock(name = name, color = color)
         }
