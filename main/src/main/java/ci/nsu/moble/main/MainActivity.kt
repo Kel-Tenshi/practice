@@ -49,10 +49,10 @@ fun MainScreenActivity(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Добавляем поле для ввода текста
+
         OutlinedTextField(
             value = text,
-            onValueChange = { text = it }, // Сохраняем то, что вводит пользователь
+            onValueChange = { text = it },
             label = { Text("Введите текст для передачи") }
         )
 
@@ -66,7 +66,7 @@ fun MainScreenActivity(modifier: Modifier = Modifier) {
             },
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text("Open SecondActivity")
+            Text("Открыть второй активити")
         }
     }
 }

@@ -90,7 +90,7 @@ fun SecondActivityScreen() {
             NavigationBar {
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Home, "Home") },
-                    label = { Text("Home") },
+                    label = { Text("Дом. База.") },
                     selected = selectedItem == 0,
                     onClick = {
                         selectedItem = 0
@@ -100,7 +100,7 @@ fun SecondActivityScreen() {
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.List, "Screen One") },
-                    label = { Text("Screen One") },
+                    label = { Text("экран ОДИИИН!!") },
                     selected = selectedItem == 1,
                     onClick = {
                         selectedItem = 1
@@ -109,7 +109,7 @@ fun SecondActivityScreen() {
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Settings, "Screen Two") },
-                    label = { Text("Screen Two") },
+                    label = { Text("экран ДВА!!!") },
                     selected = selectedItem == 2,
                     onClick = {
                         selectedItem = 2
