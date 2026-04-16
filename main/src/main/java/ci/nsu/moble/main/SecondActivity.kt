@@ -33,10 +33,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ci.nsu.moble.main.ui.theme.PracticeTheme
-
-// TODO: crate sealed class with 3 routes
 
 class SecondActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,20 +48,20 @@ class SecondActivity : ComponentActivity() {
         }
     }
 }
+
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object ScreenOne : Screen("screen_one")
     object ScreenTwo : Screen("screen_two")
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecondActivityScreen() {
 
     val navController = rememberNavController()
-    var selectedItem by remember { mutableStateOf(0) }
     val context = LocalContext.current
     var receivedText by remember { mutableStateOf("") }
-
 
     if (context is Activity) {
         receivedText = context.intent.getStringExtra("text_data") ?: "Ничего не пришло"
@@ -75,51 +74,62 @@ fun SecondActivityScreen() {
                 title = { Text(receivedText) },
                 navigationIcon = {
                     IconButton(onClick = {
-
                         val intent = Intent(context, MainActivity::class.java)
                         context.startActivity(intent)
-                        (context as? Activity)?.finish() // Закрываем текущий экран
+                        (context as? Activity)?.finish()
                     }) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Blue, titleContentColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Blue,
+                    titleContentColor = Color.White
+                )
             )
         },
         bottomBar = {
+
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+
             NavigationBar {
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Home, "Home") },
                     label = { Text("Дом. База.") },
-                    selected = selectedItem == 0,
+                    selected = currentRoute == Screen.Home.route,
                     onClick = {
-                        selectedItem = 0
-
-                        navController.navigate(Screen.Home.route)
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
                     }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.List, "Screen One") },
                     label = { Text("экран ОДИИИН!!") },
-                    selected = selectedItem == 1,
+                    selected = currentRoute == Screen.ScreenOne.route,
                     onClick = {
-                        selectedItem = 1
-                        navController.navigate(Screen.ScreenOne.route)
+                        navController.navigate(Screen.ScreenOne.route) {
+                            popUpTo(Screen.Home.route)
+                        }
                     }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Settings, "Screen Two") },
                     label = { Text("экран ДВА!!!") },
-                    selected = selectedItem == 2,
+                    selected = currentRoute == Screen.ScreenTwo.route,
                     onClick = {
-                        selectedItem = 2
-                        navController.navigate(Screen.ScreenTwo.route)
+                        navController.navigate(Screen.ScreenTwo.route) {
+                            popUpTo(Screen.Home.route)
+                        }
                     }
                 )
             }
         }
     ) { innerPadding ->
-
         NavHost(
             navController = navController,
             startDestination = Screen.Home.route,
