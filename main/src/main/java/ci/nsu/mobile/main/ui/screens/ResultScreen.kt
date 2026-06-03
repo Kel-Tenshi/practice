@@ -30,7 +30,7 @@ fun ResultScreen(
                     ResultRow(label = "Ежемесячное пополнение:", value = "${viewModel.monthlyTopUp} ₽")
                 }
 
-                Divider(modifier = Modifier.padding(vertical = 12.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
 
                 ResultRow(
                     label = "Начисленные проценты:",

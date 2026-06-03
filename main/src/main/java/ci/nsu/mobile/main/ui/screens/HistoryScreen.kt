@@ -62,7 +62,7 @@ fun HistoryScreen(
                     Text("Срок вклада: ${calc.periodMonths} мес.")
                     Text("Ставка: ${calc.interestRate}%")
                     calc.monthlyTopUp?.let { Text("Пополнение: $it ₽") }
-                    Divider(modifier = Modifier.padding(vertical = 8.dp))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     Text("Начисленные проценты: ${String.format(Locale.US, "%.2f", calc.interestEarned)} ₽")
                     Text("Итоговая сумма: ${String.format(Locale.US, "%.2f", calc.finalAmount)} ₽")
                 }
